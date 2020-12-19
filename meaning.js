@@ -12,9 +12,9 @@ function sentenceType(sentence, waitForResponse) {
 		return ['MUSIC_NEXT', {}];
 	else if (sentence.match(/(((mets?|joue) la )?(musique|chanson) (precedente?|d[' ]avant)|(musique|chanson) precedente?)/i))
 		return ['MUSIC_PREVIOUS', {}];
-	else if (sentence.match(/((mets?( sur)? )?pause|arrete la (musique|chanson))/i))
+	else if (sentence.match(/((mets?( sur)? |mais )?pause|arrete la (musique|chanson))/i))
 		return ['MUSIC_PAUSE', {}];
-	else if (sentence.match(/((mets? )?play|(mets?|joue|rejoue) la (musique|chanson))/i))
+	else if (sentence.match(/((mets? |mais )?play|(mets?|joue|rejoue) la (musique|chanson))/i))
 		return ['MUSIC_PLAY', {}]
 	else
 		return ['UNKNOWN', {}];
