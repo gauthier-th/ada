@@ -1,0 +1,14 @@
+extends layout
+
+block content
+	h1 Spotify
+
+	if !callback
+		a(href='/spotify/connect') Connect to Spotify
+	else
+		if error
+			h3 Une erreur s'est produite
+			p Impossible de se connecter avec Spotify...
+		else
+			h3 Connexion r&eacute;ussie !
+			p Vous pouvez fermer cette page.

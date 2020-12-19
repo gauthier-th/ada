@@ -1,0 +1,13 @@
+body {
+	min-height: 100vh;
+	color: #eee !important;
+	background-color: #333 !important;
+}
+
+#navbar {
+	height: 40px;
+	padding: 4px 20px;
+}
+#container {
+	min-height: calc(100vh - 40px);
+}

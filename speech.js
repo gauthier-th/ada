@@ -40,6 +40,7 @@ module.exports = recordSpeech;
 
 function detectSilence(stream, callback, silencesCount = 5) {
 	let silences = 0;
+	let startTime = Date.now();
 	stream.on('data', chunk => {
 		let speechSample;
 		let silenceLength = 0;
@@ -58,8 +59,7 @@ function detectSilence(stream, callback, silencesCount = 5) {
 		}
 		if (silenceLength == chunk.length/2)
 			silences++;
-		if (silences >= silencesCount) {
+		if (silences >= silencesCount && Date.now() - startTime > 4000)
 			callback();
-		}
 	});
 }
