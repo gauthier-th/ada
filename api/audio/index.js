@@ -1,3 +1,4 @@
+const winAudio = require('win-audio');
 const audioPlayer = require('./spotify');
 
 module.exports.pause = () => {
@@ -11,4 +12,14 @@ module.exports.next = () => {
 }
 module.exports.previous = () => {
 	audioPlayer.previous();
+}
+
+module.exports.volumeUp = (count = 2) => {
+	winAudio.speaker.increase(count);
+}
+module.exports.volumeDown = (count = 2) => {
+	winAudio.speaker.decrease(count);
+}
+module.exports.setVolume = (count) => {
+	winAudio.speaker.set(count);
 }

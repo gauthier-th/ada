@@ -12,10 +12,10 @@ module.exports.play = () => {
 	spotifyRequest('https://api.spotify.com/v1/me/player/play', 'PUT');
 };
 module.exports.next = () => {
-	spotifyRequest('https://api.spotify.com/v1/me/player/next', 'PUT');
+	spotifyRequest('https://api.spotify.com/v1/me/player/next', 'POST');
 };
 module.exports.previous = () => {
-	spotifyRequest('https://api.spotify.com/v1/me/player/previous', 'PUT');
+	spotifyRequest('https://api.spotify.com/v1/me/player/previous', 'POST');
 };
 
 function spotifyRequest(url, method, headers, body, callback, _dontRepeat = false) {

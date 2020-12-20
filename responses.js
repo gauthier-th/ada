@@ -17,8 +17,15 @@ function response(meaning) {
 		audioApi.next();
 	else if (meaning.type === 'MUSIC_PREVIOUS')
 		audioApi.previous();
-	else if (meaning.type === 'NOTHING')
-		readAudio('Désolé, je n\'ai rien entendu.');
+	else if (meaning.type === 'AUDIO_UP')
+		audioApi.volumeUp(meaning.parameters.count);
+	else if (meaning.type === 'AUDIO_DOWN')
+		audioApi.volumeDown(meaning.parameters.count);
+	else if (meaning.type === 'AUDIO_SET')
+		audioApi.setVolume(meaning.parameters.count);
+	else if (meaning.type === 'NOTHING') {
+		// readAudio('Désolé, je n\'ai rien entendu.');
+	}
 	else
 		readAudio('Désolé, je n\'ai pas compris.');
 }
