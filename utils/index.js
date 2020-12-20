@@ -45,3 +45,7 @@ module.exports.playSound = (filePath) => {
 		});
 	});
 }
+
+module.exports.randomItem = (items) => {
+	return items[Math.round(Math.random() * (items.length - 1))];
+}

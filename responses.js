@@ -1,6 +1,6 @@
 const fs = require('fs');
 const request = require('request');
-const { playSound } = require('./utils');
+const { playSound, randomItem } = require('./utils');
 
 const audioApi = require('./api/audio');
 const tramApi = require('./api/tram');
@@ -8,9 +8,17 @@ const tramApi = require('./api/tram');
 function response(meaning) {
 	console.log(meaning);
 	if (meaning.type === 'GREETINGS_HOW_ARE_YOU')
-		readAudio('Merci, je vais bien et vous ?');
-	else if (meaning.type === 'GREETINGS_HELLO')
-		readAudio('Bonjour.');
+		readAudio(randomItem(['Merci, je vais bien et vous ?', 'Je me porte à merveille, et vous ?', 'Tout va bien, et vous ?']));
+	else if (meaning.type === 'GREETINGS_HELLO') {
+		if ((new Date()).getHours() >= 18)
+			readAudio(randomItem(['Bonsoir, comment allez-vous ?', 'Bonsoir, allez-vous bien ?']));
+		else
+			readAudio(randomItem(['Bonjour, comment allez-vous ?', 'Bonjour, allez-vous bien ?']));
+	}
+	else if (meaning.type === 'GREETINGS_RESPONSE_GOOD')
+		readAudio(randomItem(['Je suis heureuse de l\'apprendre.', 'Vous m\'en voyez ravie.', 'Très bien.']));
+	else if (meaning.type === 'GREETINGS_RESPONSE_BAD')
+		readAudio(randomItem(['Oh, j\'en suis désolé.', 'Vous m\'en voyez navré.', 'Désolé de l\'apprendre']));
 	else if (meaning.type === 'MUSIC_PAUSE')
 		audioApi.pause();
 	else if (meaning.type === 'MUSIC_PLAY')
@@ -29,8 +37,10 @@ function response(meaning) {
 		audioApi.mute();
 	else if (meaning.type === 'AUDIO_UNMUTE')
 		audioApi.unmute();
-	else if (meaning.type == 'TRAM_PASSAGE')
+	else if (meaning.type === 'TRAM_PASSAGE')
 		tramApi.nextPassage(meaning.parameters.direction).then(readAudio);
+	else if (meaning.type === 'DISCUSSION_SHUT_UP')
+		readAudio(randomItem(['Ok.', 'D\'accord.', 'Bien sûr.', 'Ça marche.', 'Comme vous voulez.']));
 	else if (meaning.type === 'NOTHING') {
 		// readAudio('Désolé, je n\'ai rien entendu.');
 	}

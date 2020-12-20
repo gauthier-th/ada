@@ -1,13 +1,17 @@
 const { removeAccents } = require('./utils');
 const { isNumber, parseNumber } = require('./utils/numbers-parsing');
 
-const lastSentences = [];
+const lastSentences = [{ type: 'UNKNOWN', parameters: {} }];
 
 function sentenceType(sentence, waitForResponse) {
 	if (!sentence)
 		return ['NOTHING', {}];
 	sentence = removeAccents(sentence);
-	if (sentence.match(/((est[- ]ce que |comment )?ca va|((tu|vous) vas|vas[- ](tu|vous)) bien|comment ((tu|vous) vas|vas[- ](tu|vous)))/i))
+	if ((lastSentences[0].type === 'GREETINGS_HOW_ARE_YOU' || lastSentences[0].type === 'GREETINGS_HELLO') && sentence.match(/(ca va|je (me (porte|sens)|vais) bien)/i))
+		return ['GREETINGS_RESPONSE_GOOD', {}];
+	else if ((lastSentences[0].type === 'GREETINGS_HOW_ARE_YOU' || lastSentences[0].type === 'GREETINGS_HELLO') && sentence.match(/(ca (ne )? va pas|je (ne )? (me (porte|sens)|vais) (pas bien|mal))/i))
+		return ['GREETINGS_RESPONSE_BAD', {}];
+	else if (sentence.match(/((est[- ]ce que |comment )?ca va|((tu|vous) vas|vas[- ](tu|vous)) bien|comment ((tu|vous) vas|vas[- ](tu|vous)))/i))
 		return ['GREETINGS_HOW_ARE_YOU', {}];
 	else if (sentence.match(/(((mets?|joue) la )?(musique|chanson) (suivante|prochaine|d[' ]apres)|prochaine (musique|chanson))/i))
 		return ['MUSIC_NEXT', {}];
@@ -45,14 +49,16 @@ function sentenceType(sentence, waitForResponse) {
 	else if (sentence.match(/(prochain passage du|((quand|quel) (passe|est) le|horaire du) prochain) (tram|train|tramway) (ver[st]|direction|pour) (.*)/i))
 		return ['TRAM_PASSAGE', { direction: sentence.match(/(prochain passage du|((quand|quel) (passe|est) le|horaire du) prochain) (tram|train|tramway) (ver[st]|direction|pour) (.*)/i)[7] }];
 	else if (sentence.match(/(^|\s)(coucou|salut|bonjour|bonsoir|hi|hello|aie)($|\s)/i))
-		return ['GREETINGS_HELLO', {}]
+		return ['GREETINGS_HELLO', {}];
+	else if (sentence.match(/(chut|tais-toi|ta gueule|ferme la)/i))
+		return ['DISCUSSION_SHUT_UP', {}];
 	else
 		return ['UNKNOWN', {}];
 }
 
 function meaning(sentence, waitForResponse) {
 	const [type, parameters] = sentenceType(sentence, waitForResponse);
-	lastSentences.push({ type, parameters });
+	lastSentences.unshift({ type, parameters });
 	return {
 		type,
 		parameters
