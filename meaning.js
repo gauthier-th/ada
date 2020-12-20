@@ -38,6 +38,13 @@ function sentenceType(sentence, waitForResponse) {
 		else
 			return ['UNKNOWN', {}];
 	}
+	else if (sentence.match(/((mets? )?(mute|muet)|(enleve|coupe|retire|arrete|desactive) le son)/i))
+		return ['AUDIO_MUTE', {}];
+	else if (sentence.match(/((retire?|enleve|arrete) (mute|muet)|unmute|(remets?|active) le son)/i))
+		return ['AUDIO_UNMUTE', {}];
+	else if (sentence.match(/(prochain passage du|((quand|quel) (passe|est) le|horaire du) prochain) (tram|train|tramway) (ver[st]|direction|pour) (.*)/i)) {
+		return ['TRAM_PASSAGE', { direction: sentence.match(/(prochain passage du|((quand|quel) (passe|est) le|horaire du) prochain) (tram|train|tramway) (ver[st]|direction|pour) (.*)/i)[7] }];
+	}
 	else
 		return ['UNKNOWN', {}];
 }
