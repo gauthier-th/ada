@@ -4,9 +4,11 @@ const { oneHotword } = require('./hotword');
 const speech = require('./speech');
 const meaning = require('./meaning');
 const responses = require('./responses');
+const { playSound } = require('./utils');
 
 function coreFunction() {
 	oneHotword(1).then(() => {
+		playSound('./notify.wav');
 		console.log('Hotword detected, waiting for input...');
 		speech().then(result => {
 			console.log(result.text);

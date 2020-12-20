@@ -1,15 +1,16 @@
-const { exec } = require('child_process');
 const fs = require('fs');
 const request = require('request');
+const { playSound } = require('./utils');
 
 const audioApi = require('./api/audio');
 const tramApi = require('./api/tram');
 
 function response(meaning) {
 	console.log(meaning);
-	if (meaning.type === 'GREETINGS_HOW_ARE_YOU') {
-		readAudio('merci, je vais bien et vous ?');
-	}
+	if (meaning.type === 'GREETINGS_HOW_ARE_YOU')
+		readAudio('Merci, je vais bien et vous ?');
+	else if (meaning.type === 'GREETINGS_HELLO')
+		readAudio('Bonjour.');
 	else if (meaning.type === 'MUSIC_PAUSE')
 		audioApi.pause();
 	else if (meaning.type === 'MUSIC_PLAY')
@@ -28,9 +29,8 @@ function response(meaning) {
 		audioApi.mute();
 	else if (meaning.type === 'AUDIO_UNMUTE')
 		audioApi.unmute();
-	else if (meaning.type == 'TRAM_PASSAGE') {
+	else if (meaning.type == 'TRAM_PASSAGE')
 		tramApi.nextPassage(meaning.parameters.direction).then(readAudio);
-	}
 	else if (meaning.type === 'NOTHING') {
 		// readAudio('Désolé, je n\'ai rien entendu.');
 	}
@@ -43,14 +43,13 @@ function readAudio(text) {
 		return;
 	return new Promise(resolve => {
 		request('https://tts.gauthier-thomas.dev/?phrase=' + encodeURIComponent(text) + '&token=tts-token')
-			.pipe(fs.createWriteStream('./generated.wav'))
+			.pipe(fs.createWriteStream('./tts-generated.wav'))
 			.on('finish', () => {
-				exec('sox generated.wav -d', (err, stdout, stderr) => {
-					resolve();
+				playSound('tts-generated.wav').then(() => {
 					setTimeout(() => {
 						fs.unlink('./tts-genrated.wav', () => {})
 					}, 1000);
-				});
+				})
 			})
 	});
 }

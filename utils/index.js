@@ -1,4 +1,5 @@
 const fs = require('fs');
+const { exec } = require('child_process');
 
 module.exports.removeAccents = str => {
 	return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -34,5 +35,13 @@ module.exports.jsonConfig = function(fileName, { defaultConfigContent, defaultCo
 		this.read();
 		if (onChange !== undefined)
 			onChange(this);
+	});
+}
+
+module.exports.playSound = (filePath) => {
+	return new Promise((resolve, reject) => {
+		exec(`sox ${filePath} -d`, (err, stdout, stderr) => {
+			resolve();
+		});
 	});
 }

@@ -13,7 +13,7 @@ function sentenceType(sentence, waitForResponse) {
 		return ['MUSIC_NEXT', {}];
 	else if (sentence.match(/(((mets?|joue) la )?(musique|chanson) (precedente?|d[' ]avant)|(musique|chanson) precedente?)/i))
 		return ['MUSIC_PREVIOUS', {}];
-	else if (sentence.match(/((mets?( sur)? |mais )?pause|arrete la (musique|chanson))/i))
+	else if (sentence.match(/((mets?( sur)? |mais )?pause|arrete la (musique|chanson))|[ml]'epouse/i))
 		return ['MUSIC_PAUSE', {}];
 	else if (sentence.match(/((mets? |mais )?(play|plait)|(mets?|joue|rejoue) la (musique|chanson))/i))
 		return ['MUSIC_PLAY', {}];
@@ -42,9 +42,10 @@ function sentenceType(sentence, waitForResponse) {
 		return ['AUDIO_MUTE', {}];
 	else if (sentence.match(/((retire?|enleve|arrete) (mute|muet)|unmute|(remets?|active) le son)/i))
 		return ['AUDIO_UNMUTE', {}];
-	else if (sentence.match(/(prochain passage du|((quand|quel) (passe|est) le|horaire du) prochain) (tram|train|tramway) (ver[st]|direction|pour) (.*)/i)) {
+	else if (sentence.match(/(prochain passage du|((quand|quel) (passe|est) le|horaire du) prochain) (tram|train|tramway) (ver[st]|direction|pour) (.*)/i))
 		return ['TRAM_PASSAGE', { direction: sentence.match(/(prochain passage du|((quand|quel) (passe|est) le|horaire du) prochain) (tram|train|tramway) (ver[st]|direction|pour) (.*)/i)[7] }];
-	}
+	else if (sentence.match(/(^|\s)(coucou|salut|bonjour|bonsoir|hi|hello|aie)($|\s)/i))
+		return ['GREETINGS_HELLO', {}]
 	else
 		return ['UNKNOWN', {}];
 }
