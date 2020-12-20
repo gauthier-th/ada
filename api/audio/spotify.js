@@ -1,4 +1,5 @@
 const path = require('path');
+const winAudio = require('win-audio');
 const request = require('request');
 const { jsonConfig, encodeBase64 } = require('../../../utils');
 
@@ -36,7 +37,27 @@ function spotifyRequest(url, method, headers, body, callback, _dontRepeat = fals
 				spotifyRequest(url, method, headers, rBody, callback, true);
 			});
 		}
+		else if (response.statusCode === 404)
+			console.log('No active device connected to Spotify.');
 		else if (callback)
 			callback(rBody);
 	});
+}
+
+
+
+module.exports.volumeUp = (count = 2) => {
+	winAudio.speaker.increase(count);
+}
+module.exports.volumeDown = (count = 2) => {
+	winAudio.speaker.decrease(count);
+}
+module.exports.setVolume = (count) => {
+	winAudio.speaker.set(count);
+}
+module.exports.mute = () => {
+	winAudio.speaker.mute();
+}
+module.exports.unmute = () => {
+	winAudio.speaker.unmute();
 }
