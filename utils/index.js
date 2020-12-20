@@ -53,9 +53,9 @@ module.exports.randomItem = (items) => {
 	return items[Math.round(Math.random() * (items.length - 1))];
 }
 
-module.exports.openProgram = (programPath) => {
+module.exports.shellCommand = (command) => {
 	return new Promise((resolve, reject) => {
-		exec(`"${programPath}"`, (err, stdout, stderr) => {
+		exec(command, (err, stdout, stderr) => {
 			if (err)
 				reject(err);
 			else

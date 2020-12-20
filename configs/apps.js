@@ -2,11 +2,16 @@ module.exports = [
 	{
 		regex: /fire ?f[oae]x/i,
 		name: 'Firefox',
-		path: 'C:\\Program Files\\Firefox Developer Edition\\firefox.exe'
+		command: '"C:\\Program Files\\Firefox Developer Edition\\firefox.exe"'
 	},
 	{
 		regex: /discord/i,
 		name: 'Discord',
-		path: 'C:\\Users\\thoga\\AppData\\Local\\Discord\\Update.exe'
+		command: 'C:\\Users\\thoga\\AppData\\Local\\Discord\\Update.exe --processStart Discord.exe'
+	},
+	{
+		regex: /spotify/i,
+		name: 'Spotify',
+		command: '"C:\\Users\\thoga\\AppData\\Roaming\\Spotify\\Spotify.exe"'
 	}
 ];

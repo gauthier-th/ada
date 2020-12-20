@@ -1,6 +1,6 @@
 const fs = require('fs');
 const request = require('request');
-const { playSound, randomItem, openProgram } = require('./utils');
+const { playSound, randomItem, shellCommand } = require('./utils');
 
 const audioApi = require('./api/audio');
 const tramApi = require('./api/tram');
@@ -45,7 +45,7 @@ function response(meaning) {
 	else if (meaning.type === 'OPEN_APP') {
 		for (let app of apps) {
 			if (app.regex.exec(meaning.parameters.app))
-				return openProgram(app.path);
+				return shellCommand(app.command).catch(console.error);
 		}
 		readAudio('Désolé, je n\'ai pas trouvé l\'application.');
 	}
