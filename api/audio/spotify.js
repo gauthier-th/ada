@@ -3,7 +3,7 @@ const winAudio = require('win-audio');
 const request = require('request');
 const { jsonConfig, encodeBase64 } = require('../../../utils');
 
-const config = new jsonConfig(path.join(__dirname, '../../../config.json'), { defaultConfigContent: path.join(__dirname, '../../../default-config.json') });
+const config = new jsonConfig(path.join(__dirname, '../../../configs/config.json'), { defaultConfigContent: path.join(__dirname, '../../../configs/default-config.json') });
 config.read();
 
 module.exports.pause = () => {

@@ -1,9 +1,10 @@
 const fs = require('fs');
 const request = require('request');
-const { playSound, randomItem } = require('./utils');
+const { playSound, randomItem, openProgram } = require('./utils');
 
 const audioApi = require('./api/audio');
 const tramApi = require('./api/tram');
+const apps = require('./configs/apps');
 
 function response(meaning) {
 	console.log(meaning);
@@ -41,11 +42,18 @@ function response(meaning) {
 		tramApi.nextPassage(meaning.parameters.direction).then(readAudio);
 	else if (meaning.type === 'DISCUSSION_SHUT_UP')
 		readAudio(randomItem(['Ok.', 'D\'accord.', 'Bien sûr.', 'Ça marche.', 'Comme vous voulez.']));
+	else if (meaning.type === 'OPEN_APP') {
+		for (let app of apps) {
+			if (app.regex.exec(meaning.parameters.app))
+				return openProgram(app.path);
+		}
+		readAudio('Désolé, je n\'ai pas trouvé l\'application.');
+	}
 	else if (meaning.type === 'NOTHING') {
 		// readAudio('Désolé, je n\'ai rien entendu.');
 	}
 	else
-		readAudio('désolé, je n\'ai pas compris.');
+		readAudio('Ddésolé, je n\'ai pas compris.');
 }
 
 function readAudio(text) {

@@ -4,7 +4,7 @@ const request = require('request');
 const { encodeBase64, jsonConfig } = require('../utils');
 
 const router = express.Router();
-const config = new jsonConfig(path.join(__dirname, '../config.json'), { defaultConfigContent: path.join(__dirname, '../default-config.json') });
+const config = new jsonConfig(path.join(__dirname, '../configs/config.json'), { defaultConfigContent: path.join(__dirname, '../configs/default-config.json') });
 config.read();
 
 router.get('/', (req, res) => {

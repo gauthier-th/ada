@@ -9,49 +9,51 @@ function sentenceType(sentence, waitForResponse) {
 	sentence = removeAccents(sentence);
 	if ((lastSentences[0].type === 'GREETINGS_HOW_ARE_YOU' || lastSentences[0].type === 'GREETINGS_HELLO') && sentence.match(/(ca va|je (me (porte|sens)|vais) bien)/i))
 		return ['GREETINGS_RESPONSE_GOOD', {}];
-	else if ((lastSentences[0].type === 'GREETINGS_HOW_ARE_YOU' || lastSentences[0].type === 'GREETINGS_HELLO') && sentence.match(/(ca (ne )? va pas|je (ne )? (me (porte|sens)|vais) (pas bien|mal))/i))
+	if ((lastSentences[0].type === 'GREETINGS_HOW_ARE_YOU' || lastSentences[0].type === 'GREETINGS_HELLO') && sentence.match(/(ca (ne )? va pas|je (ne )? (me (porte|sens)|vais) (pas bien|mal))/i))
 		return ['GREETINGS_RESPONSE_BAD', {}];
-	else if (sentence.match(/((est[- ]ce que |comment )?ca va|((tu|vous) vas|vas[- ](tu|vous)) bien|comment ((tu|vous) vas|vas[- ](tu|vous)))/i))
+	if (sentence.match(/((est[- ]ce que |comment )?ca va|((tu|vous) vas|vas[- ](tu|vous)) bien|comment ((tu|vous) vas|vas[- ](tu|vous)))/i))
 		return ['GREETINGS_HOW_ARE_YOU', {}];
-	else if (sentence.match(/(((mets?|joue) la )?(musique|chanson) (suivante|prochaine|d[' ]apres)|prochaine (musique|chanson))/i))
+	if (sentence.match(/(((mets?|joue) la )?(musique|chanson) (suivante|prochaine|d[' ]apres)|prochaine (musique|chanson))/i))
 		return ['MUSIC_NEXT', {}];
-	else if (sentence.match(/(((mets?|joue) la )?(musique|chanson) (precedente?|d[' ]avant)|(musique|chanson) precedente?)/i))
+	if (sentence.match(/(((mets?|joue) la )?(musique|chanson) (precedente?|d[' ]avant)|(musique|chanson) precedente?)/i))
 		return ['MUSIC_PREVIOUS', {}];
-	else if (sentence.match(/((mets?( sur)? |mais )?pause|arrete la (musique|chanson))|[ml]'epouse/i))
+	if (sentence.match(/((mets?( sur)? |mais )?pause|arrete la (musique|chanson))|[ml]'epouse/i))
 		return ['MUSIC_PAUSE', {}];
-	else if (sentence.match(/((mets? |mais )?(play|plait)|(mets?|joue|rejoue) la (musique|chanson))/i))
+	if (sentence.match(/((mets? |mais )?(play|plait)|(mets?|joue|rejoue) la (musique|chanson))/i))
 		return ['MUSIC_PLAY', {}];
-	else if (sentence.match(/(monte|augmente) le (son|volume)/i)) {
+	if (sentence.match(/(monte|augmente) le (son|volume)/i)) {
 		const match = sentence.match(/(monte|augmente) le (son|volume) de (.*)/i);
 		if (match && isNumber(match[3].replace(/pour ?cents?/gi, '')))
 			return ['AUDIO_UP', { count: parseNumber(match[3].replace(/pour ?cents?/gi, '')) }];
 		else
 			return ['AUDIO_UP', {}];
 	}
-	else if (sentence.match(/(descends?|reduit|baisse) le (son|volume)/i)) {
+	if (sentence.match(/(descends?|reduit|baisse) le (son|volume)/i)) {
 		const match = sentence.match(/(descends?|reduit|baisse) le (son|volume) de (.*)/i);
 		if (match && isNumber(match[3].replace(/pour ?cents?/gi, '')))
 			return ['AUDIO_DOWN', { count: parseNumber(match[3].replace(/pour ?cents?/gi, '')) }];
 		else
 			return ['AUDIO_DOWN', {}];
 	}
-	else if (sentence.match(/((defini[st]?|met|change) le )?(son|volume) a (.*)/i)) {
+	if (sentence.match(/((defini[st]?|met|change) le )?(son|volume) a (.*)/i)) {
 		const match = sentence.match(/((definit|met|change) le )?(son|volume) a (.*)/i);
 		if (isNumber(match[4].replace(/pour ?cents?/gi, '')))
 			return ['AUDIO_SET', { count: parseNumber(match[4].replace(/pour ?cents?/gi, '')) }];
-		else
-			return ['UNKNOWN', {}];
 	}
-	else if (sentence.match(/((mets? )?(mute|muet)|(enleve|coupe|retire|arrete|desactive) le son)/i))
+	if (sentence.match(/((mets? )?(mute|muet)|(enleve|coupe|retire|arrete|desactive) le son)/i))
 		return ['AUDIO_MUTE', {}];
-	else if (sentence.match(/((retire?|enleve|arrete) (mute|muet)|unmute|(remets?|active) le son)/i))
+	if (sentence.match(/((retire?|enleve|arrete) (mute|muet)|unmute|(remets?|active) le son)/i))
 		return ['AUDIO_UNMUTE', {}];
-	else if (sentence.match(/(prochain passage du|((quand|quel) (passe|est) le|horaire du) prochain) (tram|train|tramway) (ver[st]|direction|pour) (.*)/i))
+	if (sentence.match(/(prochain passage du|((quand|quel) (passe|est) le|horaire du) prochain) (tram|train|tramway) (ver[st]|direction|pour) (.*)/i))
 		return ['TRAM_PASSAGE', { direction: sentence.match(/(prochain passage du|((quand|quel) (passe|est) le|horaire du) prochain) (tram|train|tramway) (ver[st]|direction|pour) (.*)/i)[7] }];
-	else if (sentence.match(/(^|\s)(coucou|salut|bonjour|bonsoir|hi|hello|aie)($|\s)/i))
+	if (sentence.match(/(^|\s)(coucou|salut|bonjour|bonsoir|hi|hello|aie)($|\s)/i))
 		return ['GREETINGS_HELLO', {}];
-	else if (sentence.match(/(chut|tais-toi|ta gueule|ferme la)/i))
+	if (sentence.match(/(chut|tais-toi|ta gueule|ferme la)/i))
 		return ['DISCUSSION_SHUT_UP', {}];
+	if (sentence.match(/^ouvre/i)) {
+		const app = sentence.match(/^ouvre (.*)/i)[1];
+		return ['OPEN_APP', { app }];
+	}
 	else
 		return ['UNKNOWN', {}];
 }

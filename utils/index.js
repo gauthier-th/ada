@@ -41,11 +41,25 @@ module.exports.jsonConfig = function(fileName, { defaultConfigContent, defaultCo
 module.exports.playSound = (filePath) => {
 	return new Promise((resolve, reject) => {
 		exec(`sox ${filePath} -d`, (err, stdout, stderr) => {
-			resolve();
+			if (err)
+				reject(err);
+			else
+				resolve();
 		});
 	});
 }
 
 module.exports.randomItem = (items) => {
 	return items[Math.round(Math.random() * (items.length - 1))];
+}
+
+module.exports.openProgram = (programPath) => {
+	return new Promise((resolve, reject) => {
+		exec(`"${programPath}"`, (err, stdout, stderr) => {
+			if (err)
+				reject(err);
+			else
+				resolve();
+		});
+	});
 }

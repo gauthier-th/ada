@@ -20,3 +20,5 @@ Create a `.env` file in the root directory according to `.env.example`.
 - `SPOTIFY_CLIENT_ID`: your Spotify client ID
 - `WEB_SERVER_PORT`: local web server IP (e.g. `8080`)
 - `ROOT_URL`: root web server URL (e.g. `http://localhost:8080/`)
+
+You can also customize the configs/apps.js file where are stored the available applications.
