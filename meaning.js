@@ -60,6 +60,10 @@ function sentenceType(sentence, waitForResponse) {
 	}
 	if (sentence.match(/(raconte|dis)([- ]moi)? une (blague|plaisanterie|farce)/i))
 		return ['DISCUSSION_JOKE', {}];
+	if (sentence.match(/(repete|re ?di[st])/i))
+		return ['REPEAT', {}];
+	if (sentence.match(/^(encore|refais|une autre)$/i))
+		return [lastSentences[0].type, lastSentences[0].parameters];
 	return ['UNKNOWN', {}];
 }
 

@@ -7,6 +7,8 @@ const tramApi = require('./api/tram');
 const apps = require('./configs/apps');
 const jokes = require('./configs/jokes.json');
 
+const lastReadAudio = [];
+
 function response(meaning) {
 	console.log(meaning);
 	if (meaning.type === 'GREETINGS_HOW_ARE_YOU')
@@ -70,6 +72,10 @@ function response(meaning) {
 		const joke = randomItem(jokes);
 		readAudio(joke.joke + '\n' + joke.answer);
 	}
+	else if (meaning.type === 'REPEAT') {
+		if (lastReadAudio.length > 0)
+			readAudio(lastReadAudio[0], true);
+	}
 	else if (meaning.type === 'NOTHING') {
 		// readAudio('Désolé, je n\'ai rien entendu.');
 	}
@@ -77,9 +83,11 @@ function response(meaning) {
 		readAudio('Ddésolé, je n\'ai pas compris.');
 }
 
-function readAudio(text) {
+function readAudio(text, dontSave = false) {
 	if (!text)
 		return;
+	if (!dontSave)
+		lastReadAudio.unshift(text);
 	return new Promise(resolve => {
 		request('https://tts.gauthier-thomas.dev/?phrase=' + encodeURIComponent(text) + '&token=tts-token')
 			.pipe(fs.createWriteStream('./tts-generated.wav'))
