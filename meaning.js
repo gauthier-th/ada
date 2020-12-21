@@ -21,17 +21,17 @@ function sentenceType(sentence, waitForResponse) {
 		return ['MUSIC_PAUSE', {}];
 	if (sentence.match(/((mets? |mais )?(play|plait)|(mets?|joue|rejoue) la (musique|chanson))/i))
 		return ['MUSIC_PLAY', {}];
-	if (sentence.match(/(monte|augmente) le (son|volume)/i)) {
-		const match = sentence.match(/(monte|augmente) le (son|volume) de (.*)/i);
-		if (match && isNumber(match[3].replace(/pour ?cents?/gi, '')))
-			return ['AUDIO_UP', { count: parseNumber(match[3].replace(/pour ?cents?/gi, '')) }];
+	if (sentence.match(/((monte|augmente) le (son|volume) de (.*)|(monte|augmente) de (.*) le (son|volume))/i)) {
+		const match = sentence.match(/((monte|augmente) le (son|volume) de (.*)|(monte|augmente) de (.*) le (son|volume))/i);
+		if (match && isNumber((match[4] || match[6]).replace(/pour ?cents?/gi, '')))
+			return ['AUDIO_UP', { count: parseNumber((match[4] || match[6]).replace(/pour ?cents?/gi, '')) }];
 		else
 			return ['AUDIO_UP', {}];
 	}
-	if (sentence.match(/(descends?|reduit|baisse) le (son|volume)/i)) {
-		const match = sentence.match(/(descends?|reduit|baisse) le (son|volume) de (.*)/i);
-		if (match && isNumber(match[3].replace(/pour ?cents?/gi, '')))
-			return ['AUDIO_DOWN', { count: parseNumber(match[3].replace(/pour ?cents?/gi, '')) }];
+	if (sentence.match(/((descends?|reduit|baisse) de (.*) le (son|volume)|(descends?|reduit|baisse) le (son|volume) de (.*))/i)) {
+		const match = sentence.match(/((descends?|reduit|baisse) de (.*) le (son|volume)|(descends?|reduit|baisse) le (son|volume) de (.*))/i);
+		if (match && isNumber((match[3] || match[7]).replace(/pour ?cents?/gi, '')))
+			return ['AUDIO_DOWN', { count: parseNumber((match[3] || match[7]).replace(/pour ?cents?/gi, '')) }];
 		else
 			return ['AUDIO_DOWN', {}];
 	}
@@ -54,8 +54,11 @@ function sentenceType(sentence, waitForResponse) {
 		const app = sentence.match(/^ouvre (.*)/i)[1];
 		return ['OPEN_APP', { app }];
 	}
-	else
-		return ['UNKNOWN', {}];
+	if (sentence.match(/recherche (.+)( sur (google|bing|duck ?duck ?go|qwant|ecosia|youtube))/i)) {
+		const match = sentence.match(/recherche (.+)( sur (google|bing|duck duck go|qwant|youtube))/i);
+		return ['WEB_SEARCH', { query: match[1], engine: match[3].replace(/\s+/g, '') || 'google' }];
+	}
+	return ['UNKNOWN', {}];
 }
 
 function meaning(sentence, waitForResponse) {

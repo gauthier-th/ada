@@ -49,6 +49,22 @@ function response(meaning) {
 		}
 		readAudio('Désolé, je n\'ai pas trouvé l\'application.');
 	}
+	else if (meaning.type === 'WEB_SEARCH') {
+		let url;
+		if (meaning.parameters.engine === 'google')
+			url = 'https://www.google.com/q=' + encodeURI(meaning.parameters.query);
+		else if (meaning.parameters.engine === 'bing')
+			url = 'https://www.bing.com/search?q=' + encodeURI(meaning.parameters.query);
+		else if (meaning.parameters.engine === 'duckduckgo')
+			url = 'https://duckduckgo.com/?q=' + encodeURI(meaning.parameters.query);
+		else if (meaning.parameters.engine === 'qwant')
+			url = 'https://www.qwant.com/?q=' + encodeURI(meaning.parameters.query);
+		else if (meaning.parameters.engine === 'ecosia')
+			url = 'https://www.ecosia.org/search?q=' + encodeURI(meaning.parameters.query);
+		else if (meaning.parameters.engine === 'youtube')
+			url = 'https://www.youtube.com/results?search_query=' + encodeURI(meaning.parameters.query);
+		shellCommand('cmd /C start ' + url);
+	}
 	else if (meaning.type === 'NOTHING') {
 		// readAudio('Désolé, je n\'ai rien entendu.');
 	}
