@@ -15,7 +15,7 @@ function sentenceType(sentence, waitForResponse) {
 		return ['GREETINGS_HOW_ARE_YOU', {}];
 	if (sentence.match(/(((mets?|joue) la )?(musique|chanson) (suivante|prochaine|d[' ]apres)|prochaine (musique|chanson))/i))
 		return ['MUSIC_NEXT', {}];
-	if (sentence.match(/(((mets?|joue) la )?(musique|chanson) (precedente?|d[' ]avant)|(musique|chanson) precedente?)/i))
+	if (sentence.match(/(((re)?(mets?|joue) la )?(musique|chanson) (precedente?|d[' ]avant|au debut)|(musique|chanson) precedente?)/i))
 		return ['MUSIC_PREVIOUS', {}];
 	if (sentence.match(/((mets?( sur)? |mais )?pause|arrete la (musique|chanson))|[ml]'epouse/i))
 		return ['MUSIC_PAUSE', {}];
@@ -54,12 +54,16 @@ function sentenceType(sentence, waitForResponse) {
 		const app = sentence.match(/^ouvre (.*)/i)[1];
 		return ['OPEN_APP', { app }];
 	}
-	if (sentence.match(/recherche (.+)( sur (google|bing|duck ?duck ?go|qwant|ecosia|youtube))/i)) {
+	if (sentence.match(/(re)?cherche (.+)( sur (google|bing|duck ?duck ?go|qwant|ecosia|youtube))/i)) {
 		const match = sentence.match(/recherche (.+)( sur (google|bing|duck duck go|qwant|youtube))/i);
-		return ['WEB_SEARCH', { query: match[1], engine: match[3].replace(/\s+/g, '') || 'google' }];
+		return ['WEB_SEARCH', { query: match[2], engine: match[4].replace(/\s+/g, '') || 'google' }];
 	}
-	if (sentence.match(/(raconte|dis)([- ]moi)? une (blague|plaisanterie|farce)/i))
+	if (sentence.match(/(raconte|dis)([- ]moi)? une (\w+ ){0,3}(blague|plaisanterie|farce)/i))
 		return ['DISCUSSION_JOKE', {}];
+	if (sentence.match(/(fai[st] (l[ea] |l')(.*)|quel(le)? (bruit|son) fai[st] (l[ea] |l')(.*))/i)) {
+		const match = sentence.match(/(fai[st] (l[ea] |l')(.*)|quel(le)? (bruit|son) fai[st] (l[ea] |l')(.*))/i);
+		return ['ANIMAL', { animal: match[3] || match[7] }];
+	} 
 	if (sentence.match(/(repete|re ?di[st])/i))
 		return ['REPEAT', {}];
 	if (sentence.match(/^(encore|refais|une autre)$/i))

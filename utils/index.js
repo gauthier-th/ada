@@ -1,5 +1,6 @@
 const fs = require('fs');
 const { exec } = require('child_process');
+const request = require('request');
 
 module.exports.removeAccents = str => {
 	return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -61,5 +62,23 @@ module.exports.shellCommand = (command) => {
 			else
 				resolve();
 		});
+	});
+}
+
+module.exports.readAudio = (text, lastReadAudio = null, dontSave = false) => {
+	if (!text)
+		return;
+	if (!dontSave && lastReadAudio)
+		lastReadAudio.unshift(text);
+	return new Promise(resolve => {
+		request('https://tts.gauthier-thomas.dev/?phrase=' + encodeURIComponent(text) + '&token=tts-token')
+			.pipe(fs.createWriteStream('./tts-generated.wav'))
+			.on('finish', () => {
+				module.exports.playSound('tts-generated.wav').then(() => {
+					setTimeout(() => {
+						fs.unlink('./tts-genrated.wav', () => {})
+					}, 1000);
+				})
+			})
 	});
 }

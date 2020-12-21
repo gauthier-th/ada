@@ -1,13 +1,13 @@
-const fs = require('fs');
-const request = require('request');
-const { playSound, randomItem, shellCommand } = require('./utils');
+const { readAudio: cReadAudio, randomItem, shellCommand } = require('./utils');
 
 const audioApi = require('./api/audio');
 const tramApi = require('./api/tram');
 const apps = require('./configs/apps');
 const jokes = require('./configs/jokes.json');
+const animals = require('./api/animals');
 
 const lastReadAudio = [];
+const readAudio = (text, dontSave) => cReadAudio(text, lastReadAudio, dontSave);
 
 function response(meaning) {
 	console.log(meaning);
@@ -72,6 +72,8 @@ function response(meaning) {
 		const joke = randomItem(jokes);
 		readAudio(joke.joke + '\n' + joke.answer);
 	}
+	else if (meaning.type === 'ANIMAL')
+		animals(meaning.parameters.animal);
 	else if (meaning.type === 'REPEAT') {
 		if (lastReadAudio.length > 0)
 			readAudio(lastReadAudio[0], true);
@@ -81,24 +83,6 @@ function response(meaning) {
 	}
 	else
 		readAudio('Ddésolé, je n\'ai pas compris.');
-}
-
-function readAudio(text, dontSave = false) {
-	if (!text)
-		return;
-	if (!dontSave)
-		lastReadAudio.unshift(text);
-	return new Promise(resolve => {
-		request('https://tts.gauthier-thomas.dev/?phrase=' + encodeURIComponent(text) + '&token=tts-token')
-			.pipe(fs.createWriteStream('./tts-generated.wav'))
-			.on('finish', () => {
-				playSound('tts-generated.wav').then(() => {
-					setTimeout(() => {
-						fs.unlink('./tts-genrated.wav', () => {})
-					}, 1000);
-				})
-			})
-	});
 }
 
 module.exports = response;
