@@ -58,6 +58,8 @@ function sentenceType(sentence, waitForResponse) {
 		const match = sentence.match(/recherche (.+)( sur (google|bing|duck duck go|qwant|youtube))/i);
 		return ['WEB_SEARCH', { query: match[1], engine: match[3].replace(/\s+/g, '') || 'google' }];
 	}
+	if (sentence.match(/(raconte|dis)([- ]moi)? une (blague|plaisanterie|farce)/i))
+		return ['DISCUSSION_JOKE', {}];
 	return ['UNKNOWN', {}];
 }
 

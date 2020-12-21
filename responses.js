@@ -5,6 +5,7 @@ const { playSound, randomItem, shellCommand } = require('./utils');
 const audioApi = require('./api/audio');
 const tramApi = require('./api/tram');
 const apps = require('./configs/apps');
+const jokes = require('./configs/jokes.json');
 
 function response(meaning) {
 	console.log(meaning);
@@ -64,6 +65,10 @@ function response(meaning) {
 		else if (meaning.parameters.engine === 'youtube')
 			url = 'https://www.youtube.com/results?search_query=' + encodeURI(meaning.parameters.query);
 		shellCommand('cmd /C start ' + url);
+	}
+	else if (meaning.type === 'DISCUSSION_JOKE') {
+		const joke = randomItem(jokes);
+		readAudio(joke.joke + '\n' + joke.answer);
 	}
 	else if (meaning.type === 'NOTHING') {
 		// readAudio('Désolé, je n\'ai rien entendu.');
