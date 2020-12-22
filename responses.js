@@ -5,7 +5,7 @@ const tramApi = require('./api/tram');
 const apps = require('./configs/apps');
 const jokes = require('./configs/jokes.json');
 const animals = require('./api/animals');
-const { tomorrowWeather } = require('./api/weather');
+const { weatherDesc } = require('./api/weather');
 
 const lastReadAudio = [];
 const readAudio = (text, dontSave) => cReadAudio(text, lastReadAudio, dontSave);
@@ -75,8 +75,12 @@ async function response(meaning) {
 	}
 	else if (meaning.type === 'ANIMAL')
 		animals(meaning.parameters.animal);
-	else if (meaning.type === 'WEATHER')
-		readAudio(await tomorrowWeather(meaning.parameters.city));
+	else if (meaning.type === 'WEATHER') {
+		if (!meaning.parameters.city)
+			readAudio('Vous devez spécifier un nom de ville.');
+		else
+			readAudio(meaning.parameters.day + ', ' + await weatherDesc(meaning.parameters.city, meaning.parameters.date));
+	}
 	else if (meaning.type === 'REPEAT') {
 		if (lastReadAudio.length > 0)
 			readAudio(lastReadAudio[0], true);

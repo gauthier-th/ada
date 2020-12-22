@@ -16,7 +16,7 @@ function fetchWeather(city, cnt = 40, lang = 'fr') {
 	})
 }
 
-async function tomorrowWeather(city, dayDate = new Date(Date.now() + 1000*60*60*24)) {
+async function weatherDesc(city, dayDate = new Date(Date.now() + 1000*60*60*24)) {
 	dayDate = roundDate(dayDate);
 	const weathers = await fetchWeather(city);
 	const tomorrowWeathers = weathers.list.filter(weather => {
@@ -38,9 +38,9 @@ async function tomorrowWeather(city, dayDate = new Date(Date.now() + 1000*60*60*
 		desc = weatherDesc.slice(0, -1).join(', ') + ' et ' + weatherDesc[weatherDesc.length - 1];
 	}
 	const temp = Math.round(tomorrowWeathers.map(weather => weather.main.temp).reduce((a, b) => a + b) / tomorrowWeathers.length) - 273;
-	return `Demain il fera principalement ${desc}, avec une température moyenne de ${temp} degré.`;
+	return `il fera principalement ${desc}, avec une température moyenne de ${temp} degré à ${city}.`;
 }
 
 module.exports = {
-	tomorrowWeather
+	weatherDesc
 };

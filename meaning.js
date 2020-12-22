@@ -63,11 +63,15 @@ function sentenceType(sentence, waitForResponse) {
 	if (sentence.match(/(fai[st]( le (bruit|son) de)? (l[ea] |l')(.*)|quel(le)? (bruit|son) fai[st] (l[ea] |l')(.*))/i)) {
 		const match = sentence.match(/(fai[st] (l[ea] |l')(.*)|quel(le)? (bruit|son) fai[st] (l[ea] |l')(.*))/i);
 		return ['ANIMAL', { animal: match[5] || match[9] }];
-	} 
-	if (sentence.match(/(meteo (a|de) (.*)|quel temps( [\w-']+)* a (.*))/i)) {
-		const match = sentence.match(/(meteo (a|de) (.*)|quel temps( [\w-']+)* a (.*))/i);
-		return ['WEATHER', { city: match[3] || match[5] }];
 	}
+	if (sentence.match(/(meteo (a |de )?(.*)|quel temps( [\w-']+)* a (.*))/i)) {
+		const match = sentence.match(/(meteo (a |de )?(.*)|quel temps( [\w-']+)* a (.*))/i);
+		const day = sentence.match(/(^|\s)demain(\s|$)/i) || (new Date()).getHours() > 20 ? 'Demain' : 'Aujourd\'hui';
+		const date = { 'Aujourd\'hui': new Date(), 'Demain': new Date(Date.now() + 1000*60*60*24) }[day];
+		return ['WEATHER', { city: (match[3] || match[5]).replace(/(de )?demain|ajourd[ ']hui/, '').trim(), day, date }];
+	}
+	if (sentence.match(/(^|\s)meteo(\s|$)/i))
+		return ['WEATHER', { city: null }];
 	if (sentence.match(/(repete|re ?di[st])/i))
 		return ['REPEAT', {}];
 	if (sentence.match(/^(encore|refais|une autre)$/i))
