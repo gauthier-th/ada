@@ -1,4 +1,5 @@
 require('dotenv').config();
+const readline = require('readline');
 const webserver = require('./webserver');
 const { oneHotword } = require('./hotword');
 const speech = require('./speech');
@@ -21,3 +22,16 @@ function coreFunction() {
 	});
 }
 coreFunction();
+
+
+
+const rl = readline.createInterface({
+	input: process.stdin,
+	output: process.stdout,
+	terminal: false
+});
+
+rl.on('line', (line) => {
+	const mean = meaning(line);
+	responses(mean);
+});

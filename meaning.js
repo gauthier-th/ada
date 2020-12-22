@@ -58,12 +58,16 @@ function sentenceType(sentence, waitForResponse) {
 		const match = sentence.match(/recherche (.+)( sur (google|bing|duck duck go|qwant|youtube))/i);
 		return ['WEB_SEARCH', { query: match[2], engine: match[4].replace(/\s+/g, '') || 'google' }];
 	}
-	if (sentence.match(/(raconte|dis)([- ]moi)? une (\w+ ){0,3}(blague|plaisanterie|farce)/i))
+	if (sentence.match(/(raconte|dis)([- ]moi)? une ([\w-']+ ){0,3}(blague|plaisanterie|farce)/i))
 		return ['DISCUSSION_JOKE', {}];
-	if (sentence.match(/(fai[st] (l[ea] |l')(.*)|quel(le)? (bruit|son) fai[st] (l[ea] |l')(.*))/i)) {
+	if (sentence.match(/(fai[st]( le (bruit|son) de)? (l[ea] |l')(.*)|quel(le)? (bruit|son) fai[st] (l[ea] |l')(.*))/i)) {
 		const match = sentence.match(/(fai[st] (l[ea] |l')(.*)|quel(le)? (bruit|son) fai[st] (l[ea] |l')(.*))/i);
-		return ['ANIMAL', { animal: match[3] || match[7] }];
+		return ['ANIMAL', { animal: match[5] || match[9] }];
 	} 
+	if (sentence.match(/(meteo (a|de) (.*)|quel temps( [\w-']+)* a (.*))/i)) {
+		const match = sentence.match(/(meteo (a|de) (.*)|quel temps( [\w-']+)* a (.*))/i);
+		return ['WEATHER', { city: match[3] || match[5] }];
+	}
 	if (sentence.match(/(repete|re ?di[st])/i))
 		return ['REPEAT', {}];
 	if (sentence.match(/^(encore|refais|une autre)$/i))

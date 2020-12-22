@@ -5,11 +5,12 @@ const tramApi = require('./api/tram');
 const apps = require('./configs/apps');
 const jokes = require('./configs/jokes.json');
 const animals = require('./api/animals');
+const { tomorrowWeather } = require('./api/weather');
 
 const lastReadAudio = [];
 const readAudio = (text, dontSave) => cReadAudio(text, lastReadAudio, dontSave);
 
-function response(meaning) {
+async function response(meaning) {
 	console.log(meaning);
 	if (meaning.type === 'GREETINGS_HOW_ARE_YOU')
 		readAudio(randomItem(['Merci, je vais bien et vous ?', 'Je me porte à merveille, et vous ?', 'Tout va bien, et vous ?']));
@@ -74,6 +75,8 @@ function response(meaning) {
 	}
 	else if (meaning.type === 'ANIMAL')
 		animals(meaning.parameters.animal);
+	else if (meaning.type === 'WEATHER')
+		readAudio(await tomorrowWeather(meaning.parameters.city));
 	else if (meaning.type === 'REPEAT') {
 		if (lastReadAudio.length > 0)
 			readAudio(lastReadAudio[0], true);

@@ -82,3 +82,20 @@ module.exports.readAudio = (text, lastReadAudio = null, dontSave = false) => {
 			})
 	});
 }
+
+module.exports.roundDate = (date = new Date(), round = 'day') => {
+	const d = new Date(date.getTime());
+	if (round === 'year')
+		d.setMonth(0);
+	if (round === 'year' || round === 'month')
+		d.setDate(1);
+	if (round === 'year' || round === 'month' || round === 'day')
+		d.setHours(0);
+	if (round === 'year' || round === 'month' || round === 'day' || round === 'hour')
+		d.setMinutes(0);
+	if (round === 'year' || round === 'month' || round === 'day' || round === 'hour' || round === 'minute')
+		d.setSeconds(0);
+	if (round === 'year' || round === 'month' || round === 'day' || round === 'hour' || round === 'minute' || round === 'second')
+		d.setMilliseconds(0);
+	return d;
+}
