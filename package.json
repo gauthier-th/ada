@@ -1,14 +1,19 @@
 {
   "name": "ada-ai",
   "version": "1.0.0",
-  "description": "",
+  "description": "Ada voice assistant",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gauthier-th/ada.git"
+  },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "gauthier-th",
+  "license": "MIT",
   "dependencies": {
     "divia-api": "^1.0.1",
     "dotenv": "^8.2.0",
@@ -19,5 +24,9 @@
     "pug": "^3.0.0",
     "request": "^2.88.2",
     "win-audio": "^2.0.2"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/gauthier-th/ada/issues"
+  },
+  "homepage": "https://github.com/gauthier-th/ada#readme"
 }
