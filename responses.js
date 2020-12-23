@@ -1,4 +1,5 @@
-const { readAudio: cReadAudio, randomItem, shellCommand } = require('./utils');
+const { randomItem, shellCommand } = require('./utils');
+const stt = require('./stt');
 
 const audioApi = require('./api/audio');
 const tramApi = require('./api/tram');
@@ -8,7 +9,7 @@ const animals = require('./api/animals');
 const { weatherDesc } = require('./api/weather');
 
 const lastReadAudio = [];
-const readAudio = (text, dontSave) => cReadAudio(text, lastReadAudio, dontSave);
+const readAudio = (text, dontSave) => stt(text, lastReadAudio, dontSave);
 
 async function response(meaning) {
 	console.log(meaning);

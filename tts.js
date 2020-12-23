@@ -5,7 +5,7 @@ const request = require('request')
  * Record and parse voice
  * @returns {Promise<object>}
  */
-const recordSpeech = () => {
+const tts = () => {
 	return new Promise((resolve, reject) => {
 		const recStream = rec.start();
 
@@ -35,7 +35,7 @@ const recordSpeech = () => {
 	});
 };
 
-module.exports = recordSpeech;
+module.exports = tts;
 
 
 function detectSilence(stream, callback, silencesCount = 5) {

@@ -21,15 +21,15 @@ function sentenceType(sentence, waitForResponse) {
 		return ['MUSIC_PAUSE', {}];
 	if (sentence.match(/((mets? |mais )?(play|plait)|(mets?|joue|rejoue) la (musique|chanson))/i))
 		return ['MUSIC_PLAY', {}];
-	if (sentence.match(/((monte|augmente) le (son|volume) de (.*)|(monte|augmente) de (.*) le (son|volume))/i)) {
-		const match = sentence.match(/((monte|augmente) le (son|volume) de (.*)|(monte|augmente) de (.*) le (son|volume))/i);
+	if (sentence.match(/((monte|augmente) le (son|volume) de (.*)|(monte|augmente) de (.*) le (son|volume)|plus fort)/i)) {
+		const match = sentence.match(/((monte|augmente) le (son|volume) de (.*)|(monte|augmente) de (.*) le (son|volume)|plus fort)/i);
 		if (match && isNumber((match[4] || match[6]).replace(/pour ?cents?/gi, '')))
 			return ['AUDIO_UP', { count: parseNumber((match[4] || match[6]).replace(/pour ?cents?/gi, '')) }];
 		else
 			return ['AUDIO_UP', {}];
 	}
-	if (sentence.match(/((descends?|reduit|baisse) de (.*) le (son|volume)|(descends?|reduit|baisse) le (son|volume) de (.*))/i)) {
-		const match = sentence.match(/((descends?|reduit|baisse) de (.*) le (son|volume)|(descends?|reduit|baisse) le (son|volume) de (.*))/i);
+	if (sentence.match(/((descends?|reduit|baisse) de (.*) le (son|volume)|(descends?|reduit|baisse) le (son|volume) de (.*)|moins fort)/i)) {
+		const match = sentence.match(/((descends?|reduit|baisse) de (.*) le (son|volume)|(descends?|reduit|baisse) le (son|volume) de (.*)|moins fort)/i);
 		if (match && isNumber((match[3] || match[7]).replace(/pour ?cents?/gi, '')))
 			return ['AUDIO_DOWN', { count: parseNumber((match[3] || match[7]).replace(/pour ?cents?/gi, '')) }];
 		else
@@ -48,7 +48,7 @@ function sentenceType(sentence, waitForResponse) {
 		return ['TRAM_PASSAGE', { direction: sentence.match(/(prochain passage du|((quand|quel) (passe|est) le|horaire du) prochain) (tram|train|tramway) (ver[st]|direction|pour) (.*)/i)[7] }];
 	if (sentence.match(/(^|\s)(coucou|salut|bonjour|bonsoir|hi|hello|aie)($|\s)/i))
 		return ['GREETINGS_HELLO', {}];
-	if (sentence.match(/(chut|tais-toi|ta gueule|ferme la)/i))
+	if (sentence.match(/(chut|tais[- ]toi|ta gueule|ferme la)/i))
 		return ['DISCUSSION_SHUT_UP', {}];
 	if (sentence.match(/^ouvre/i)) {
 		const app = sentence.match(/^ouvre (.*)/i)[1];
