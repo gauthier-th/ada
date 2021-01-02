@@ -21,17 +21,19 @@ function sentenceType(sentence, waitForResponse) {
 		return ['MUSIC_PAUSE', {}];
 	if (sentence.match(/((mets? |mais )?(play|plait)|(mets?|joue|rejoue) la (musique|chanson))/i))
 		return ['MUSIC_PLAY', {}];
-	if (sentence.match(/((monte|augmente) le (son|volume) de (.*)|(monte|augmente) de (.*) le (son|volume)|plus fort)/i)) {
-		const match = sentence.match(/((monte|augmente) le (son|volume) de (.*)|(monte|augmente) de (.*) le (son|volume)|plus fort)/i);
-		if (match && isNumber((match[4] || match[6]).replace(/pour ?cents?/gi, '')))
-			return ['AUDIO_UP', { count: parseNumber((match[4] || match[6]).replace(/pour ?cents?/gi, '')) }];
+	if (sentence.match(/((monte|augmente)( de (.*))? le (son|volume)( de (.*))?|(monte|augmente)( de (.*))? le (son|volume)( de (.*))?|plus fort)/i)) {
+		const match = sentence.match(/((monte|augmente)( de (.*))? le (son|volume)( de (.*))?|(monte|augmente)( de (.*))? le (son|volume)( de (.*))?|plus fort)/i);
+		const vol = match[4] || match[7] || match[10] || match[13] || "";
+		if (match && isNumber(vol.replace(/pour ?cents?/gi, '')))
+			return ['AUDIO_UP', { count: parseNumber(vol.replace(/pour ?cents?/gi, '')) }];
 		else
 			return ['AUDIO_UP', {}];
 	}
-	if (sentence.match(/((descends?|reduit|baisse) de (.*) le (son|volume)|(descends?|reduit|baisse) le (son|volume) de (.*)|moins fort)/i)) {
-		const match = sentence.match(/((descends?|reduit|baisse) de (.*) le (son|volume)|(descends?|reduit|baisse) le (son|volume) de (.*)|moins fort)/i);
-		if (match && isNumber((match[3] || match[7]).replace(/pour ?cents?/gi, '')))
-			return ['AUDIO_DOWN', { count: parseNumber((match[3] || match[7]).replace(/pour ?cents?/gi, '')) }];
+	if (sentence.match(/((descends?|reduit|baisse)( de (.*))? le (son|volume)( de (.*))?|(descends?|reduit|baisse)( de (.*))? le (son|volume)( de (.*))?|moins fort)/i)) {
+		const match = sentence.match(/((descends?|reduit|baisse)( de (.*))? le (son|volume)( de (.*))?|(descends?|reduit|baisse)( de (.*))? le (son|volume)( de (.*))?|moins fort)/i);
+		const vol = match[4] || match[7] || match[10] || match[13] || "";
+		if (match && isNumber(vol.replace(/pour ?cents?/gi, '')))
+			return ['AUDIO_DOWN', { count: parseNumber(vol.replace(/pour ?cents?/gi, '')) }];
 		else
 			return ['AUDIO_DOWN', {}];
 	}

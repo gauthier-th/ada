@@ -1,9 +1,8 @@
 const path = require('path');
-const winAudio = require('win-audio');
 const request = require('request');
-const { jsonConfig, encodeBase64 } = require('../../../utils');
+const { jsonConfig, encodeBase64 } = require('../../utils');
 
-const config = new jsonConfig(path.join(__dirname, '../../../configs/config.json'), { defaultConfigContent: path.join(__dirname, '../../../configs/default-config.json') });
+const config = new jsonConfig(path.join(__dirname, '../../configs/config.json'), { defaultConfigContent: path.join(__dirname, '../../configs/default-config.json') });
 config.read();
 
 module.exports.pause = () => {
@@ -23,9 +22,10 @@ function spotifyRequest(url, method, headers, body, callback, _dontRepeat = fals
 	request(url, {
 		method,
 		headers: headers ? headers : {
-			Authorization: 'Bearer ' + config.json.spotify.access_token
+			Authorization: 'Bearer ' + config.json.spotify.access_token,
+			...(body && (method === 'POST' || method === 'PUT') ? { 'Content-Type': 'application/x-www-form-urlencoded' } : {})
 		},
-		body
+		body: body || null
 	}, (error, response, rBody) => {
 		if (response.statusCode === 401 && !_dontRepeat) {
 			spotifyRequest('https://accounts.spotify.com/api/token', 'POST', {
@@ -43,21 +43,36 @@ function spotifyRequest(url, method, headers, body, callback, _dontRepeat = fals
 			callback(rBody);
 	});
 }
-
-
-
-module.exports.volumeUp = (count = 2) => {
-	winAudio.speaker.increase(count);
+function getVolume() {
+	return new Promise(resolve => {
+		spotifyRequest('https://api.spotify.com/v1/me/player', 'GET', null, null, res => {
+			try {
+				resolve(JSON.parse(res).device.volume_percent);
+			}
+			catch {
+				resolve(50);
+			}
+		});
+	});
 }
-module.exports.volumeDown = (count = 2) => {
-	winAudio.speaker.decrease(count);
+function setVolume(percent) {
+	return spotifyRequest('https://api.spotify.com/v1/me/player/volume?volume_percent=' + percent, 'PUT')
+}
+
+
+
+module.exports.volumeUp = async (count = 2) => {
+	setVolume(Math.min((await getVolume()) + count, 100));
+}
+module.exports.volumeDown = async (count = 2) => {
+	setVolume(Math.max((await getVolume()) - count, 0));
 }
 module.exports.setVolume = (count) => {
-	winAudio.speaker.set(count);
+	setVolume(count);
 }
 module.exports.mute = () => {
-	winAudio.speaker.mute();
+	setVolume(0);
 }
 module.exports.unmute = () => {
-	winAudio.speaker.unmute();
+	setVolume(50);
 }

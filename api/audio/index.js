@@ -1,31 +1,34 @@
-const audioPlayer = require('./windows');
-// const audioPlayer = require('./spotify');
-
-module.exports.pause = () => {
-	audioPlayer.pause();
-}
-module.exports.play = () => {
-	audioPlayer.play();
-}
-module.exports.next = () => {
-	audioPlayer.next();
-}
-module.exports.previous = () => {
-	audioPlayer.previous();
+const defautPlayer = 'spotify';
+const players = {
+	windows: require('./windows'),
+	spotify: require('./spotify')
 }
 
-module.exports.volumeUp = (count ) => {
-	audioPlayer.volumeUp(count);
+module.exports.pause = (player = defautPlayer) => {
+	players[player].pause();
 }
-module.exports.volumeDown = (count) => {
-	audioPlayer.volumeDown(count);
+module.exports.play = (player = defautPlayer) => {
+	players[player].play();
 }
-module.exports.setVolume = (count) => {
-	audioPlayer.setVolume(count);
+module.exports.next = (player = defautPlayer) => {
+	players[player].next();
 }
-module.exports.mute = () => {
-	audioPlayer.mute();
+module.exports.previous = (player = defautPlayer) => {
+	players[player].previous();
 }
-module.exports.unmute = () => {
-	audioPlayer.unmute();
+
+module.exports.volumeUp = (count, player = defautPlayer) => {
+	players[player].volumeUp(count);
+}
+module.exports.volumeDown = (count, player = defautPlayer) => {
+	players[player].volumeDown(count);
+}
+module.exports.setVolume = (count, player = defautPlayer) => {
+	players[player].setVolume(count);
+}
+module.exports.mute = (player = defautPlayer) => {
+	players[player].mute();
+}
+module.exports.unmute = (player = defautPlayer) => {
+	players[player].unmute();
 }
