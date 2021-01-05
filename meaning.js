@@ -19,19 +19,17 @@ function sentenceType(sentence, waitForResponse) {
 		return ['MUSIC_PREVIOUS', {}];
 	if (sentence.match(/((mets?( sur)? |mais )?pause|arrete la (musique|chanson))|[ml]'epouse/i))
 		return ['MUSIC_PAUSE', {}];
-	if (sentence.match(/((mets? |mais )?(play|plait)|(mets?|joue|rejoue) la (musique|chanson))/i))
-		return ['MUSIC_PLAY', {}];
-	if (sentence.match(/((monte|augmente)( de (.*))? le (son|volume)( de (.*))?|(monte|augmente)( de (.*))? le (son|volume)( de (.*))?|plus fort)/i)) {
-		const match = sentence.match(/((monte|augmente)( de (.*))? le (son|volume)( de (.*))?|(monte|augmente)( de (.*))? le (son|volume)( de (.*))?|plus fort)/i);
-		const vol = match[4] || match[7] || match[10] || match[13] || "";
+	if (sentence.match(/((monte|augmente)( de (.+))? le (son|volume)( de (.+))?|(monte|augmente)( de (.+))? le (son|volume)( de (.+))?|(mets? |mais )?(de )?((.+) )?plus fort)/i)) {
+		const match = sentence.match(/((monte|augmente)( de (.+))? le (son|volume)( de (.+))?|(monte|augmente)( de (.+))? le (son|volume)( de (.+))?|(mets? |mais )?(de )?((.+) )?plus fort)/i);
+		const vol = match[4] || match[7] || match[10] || match[13] || match[17] || "";
 		if (match && isNumber(vol.replace(/pour ?cents?/gi, '')))
 			return ['AUDIO_UP', { count: parseNumber(vol.replace(/pour ?cents?/gi, '')) }];
 		else
 			return ['AUDIO_UP', {}];
 	}
-	if (sentence.match(/((descends?|reduit|baisse)( de (.*))? le (son|volume)( de (.*))?|(descends?|reduit|baisse)( de (.*))? le (son|volume)( de (.*))?|moins fort)/i)) {
-		const match = sentence.match(/((descends?|reduit|baisse)( de (.*))? le (son|volume)( de (.*))?|(descends?|reduit|baisse)( de (.*))? le (son|volume)( de (.*))?|moins fort)/i);
-		const vol = match[4] || match[7] || match[10] || match[13] || "";
+	if (sentence.match(/((descends?|reduit|baisse)( de (.*))? le (son|volume)( de (.*))?|(descends?|reduit|baisse)( de (.*))? le (son|volume)( de (.*))?|(mets? |mais )?(de )?((.+) )?moins fort)/i)) {
+		const match = sentence.match(/((descends?|reduit|baisse)( de (.*))? le (son|volume)( de (.*))?|(descends?|reduit|baisse)( de (.*))? le (son|volume)( de (.*))?|(mets? |mais )?(de )?((.+) )?moins fort)/i);
+		const vol = match[4] || match[7] || match[10] || match[13] || match[17] || "";
 		if (match && isNumber(vol.replace(/pour ?cents?/gi, '')))
 			return ['AUDIO_DOWN', { count: parseNumber(vol.replace(/pour ?cents?/gi, '')) }];
 		else
@@ -56,8 +54,14 @@ function sentenceType(sentence, waitForResponse) {
 		const app = sentence.match(/^ouvre (.*)/i)[1];
 		return ['OPEN_APP', { app }];
 	}
+	if (sentence.match(/((re)?(met|mais|joue) (la (musique|chanson) (.+)|([dt]u .+))|joue (.+))/i)) {
+		const match = sentence.match(/((re)?(met|mais|joue) (la (musique|chanson) (.+)|([dt]u .+))|joue (.+))/i);
+		return ['MUSIC_QUERY', { query: match[6] || match[7] || match[8] }];
+	}
+	if (sentence.match(/((mets? |mais )?(play|plait)|(mets?|joue|rejoue) la (musique|chanson))/i))
+		return ['MUSIC_PLAY', {}];
 	if (sentence.match(/(re)?cherche (.+)( sur (google|bing|duck ?duck ?go|qwant|ecosia|youtube))/i)) {
-		const match = sentence.match(/recherche (.+)( sur (google|bing|duck duck go|qwant|youtube))/i);
+		const match = sentence.match(/(re)?cherche (.+)( sur (google|bing|duck ?duck ?go|qwant|ecosia|youtube))/i);
 		return ['WEB_SEARCH', { query: match[2], engine: match[4].replace(/\s+/g, '') || 'google' }];
 	}
 	if (sentence.match(/(raconte|dis)([- ]moi)? une ([\w-']+ ){0,3}(blague|plaisanterie|farce)/i))

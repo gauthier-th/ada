@@ -14,7 +14,7 @@ function coreFunction() {
 		const volume = winAudio.speaker.get();
 		setTimeout(() => {
 			winAudio.speaker.set(Math.round(volume / 2));
-		}, 1000);
+		}, 700);
 		console.log('Hotword detected, waiting for input...');
 		tts().then(result => {
 			winAudio.speaker.set(volume);

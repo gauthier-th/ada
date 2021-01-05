@@ -57,7 +57,7 @@ async function response(meaning) {
 	else if (meaning.type === 'WEB_SEARCH') {
 		let url;
 		if (meaning.parameters.engine === 'google')
-			url = 'https://www.google.com/q=' + encodeURI(meaning.parameters.query);
+			url = 'https://www.google.com/search?q=' + encodeURI(meaning.parameters.query);
 		else if (meaning.parameters.engine === 'bing')
 			url = 'https://www.bing.com/search?q=' + encodeURI(meaning.parameters.query);
 		else if (meaning.parameters.engine === 'duckduckgo')
@@ -82,6 +82,8 @@ async function response(meaning) {
 		else
 			readAudio(meaning.parameters.day + ', ' + await weatherDesc(meaning.parameters.city, meaning.parameters.date));
 	}
+	else if (meaning.type === 'MUSIC_QUERY')
+		audioApi.musicQuery(meaning.parameters.query);
 	else if (meaning.type === 'REPEAT') {
 		if (lastReadAudio.length > 0)
 			readAudio(lastReadAudio[0], true);

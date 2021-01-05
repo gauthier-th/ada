@@ -1,3 +1,4 @@
+require('dotenv').config();
 const path = require('path');
 const request = require('request');
 const { jsonConfig, encodeBase64 } = require('../../utils');
@@ -27,6 +28,8 @@ function spotifyRequest(url, method, headers, body, callback, _dontRepeat = fals
 		},
 		body: body || null
 	}, (error, response, rBody) => {
+		if (error)
+			console.error(error);
 		if (response.statusCode === 401 && !_dontRepeat) {
 			spotifyRequest('https://accounts.spotify.com/api/token', 'POST', {
 				Authorization: 'Basic ' + encodeBase64(process.env.SPOTIFY_CLIENT_ID + ':' + process.env.SPOTIFY_CLIENT_SECRET),
@@ -75,4 +78,37 @@ module.exports.mute = () => {
 }
 module.exports.unmute = () => {
 	setVolume(50);
+}
+
+
+function spotifySearch(query, type = 'track') {
+	return new Promise(resolve => {
+		spotifyRequest(`https://api.spotify.com/v1/search?type=${type}&q=${encodeURIComponent(query.toLowerCase())}`, 'GET', null, null, res => {
+			const json = JSON.parse(res);
+			resolve(json);
+		});
+	})
+}
+
+module.exports.musicQuery = async (query) => {
+	if (query.match(/^du /i)) { // only artist
+		const artist = query.replace(/^du /i, '');
+		const search = await spotifySearch(`artist:"${artist}"`, 'track');
+		spotifyRequest('https://api.spotify.com/v1/me/player/queue?uri=' + encodeURIComponent(search.artists.items[0].uri), 'POST', null, null, () => {
+			module.exports.next();
+		});
+	}
+	else {
+		let search;
+		if (query.match(/ de ((.+ ?){1,5})$/i)) {
+			const title = query.replace(/ de ((.+ ?){1,5})$/i, '');
+			const artist = query.match(/ de ((.+ ?){1,5})$/i)[1];
+			search = await spotifySearch(`${title} artist:"${artist}"`);
+		}
+		else
+			search = await spotifySearch(query);
+		spotifyRequest('https://api.spotify.com/v1/me/player/queue?uri=' + encodeURIComponent(search.tracks.items[0].uri), 'POST', null, null, () => {
+			module.exports.next();
+		});
+	}
 }

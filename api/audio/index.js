@@ -1,4 +1,4 @@
-const defautPlayer = 'spotify';
+const defautPlayer = 'windows';
 const players = {
 	windows: require('./windows'),
 	spotify: require('./spotify')
@@ -31,4 +31,8 @@ module.exports.mute = (player = defautPlayer) => {
 }
 module.exports.unmute = (player = defautPlayer) => {
 	players[player].unmute();
+}
+
+module.exports.musicQuery = (query, player = 'spotify') => {
+	players[player].musicQuery(query);
 }
