@@ -7,12 +7,6 @@ function sentenceType(sentence, waitForResponse) {
 	if (!sentence)
 		return ['NOTHING', {}];
 	sentence = removeAccents(sentence);
-	if ((lastSentences[0].type === 'GREETINGS_HOW_ARE_YOU' || lastSentences[0].type === 'GREETINGS_HELLO') && sentence.match(/(ca va|je (me (porte|sens)|vais) bien)/i))
-		return ['GREETINGS_RESPONSE_GOOD', {}];
-	if ((lastSentences[0].type === 'GREETINGS_HOW_ARE_YOU' || lastSentences[0].type === 'GREETINGS_HELLO') && sentence.match(/(ca (ne )? va pas|je (ne )? (me (porte|sens)|vais) (pas bien|mal))/i))
-		return ['GREETINGS_RESPONSE_BAD', {}];
-	if (sentence.match(/((est[- ]ce que |comment )?ca va|((tu|vous) vas|vas[- ](tu|vous)) bien|comment ((tu|vous) vas|vas[- ](tu|vous)))/i))
-		return ['GREETINGS_HOW_ARE_YOU', {}];
 	if (sentence.match(/(((mets?|joue) la )?(musique|chanson) (suivante|prochaine|d[' ]apres)|prochaine (musique|chanson))/i))
 		return ['MUSIC_NEXT', {}];
 	if (sentence.match(/(((re)?(mets?|joue) la )?(musique|chanson) (precedente?|d[' ]avant|au debut)|(musique|chanson) precedente?)/i))
@@ -68,7 +62,7 @@ function sentenceType(sentence, waitForResponse) {
 		return ['DISCUSSION_JOKE', {}];
 	if (sentence.match(/(fai[st]( le (bruit|son) de)? (l[ea] |l')(.*)|quel(le)? (bruit|son) fai[st] (l[ea] |l')(.*))/i)) {
 		const match = sentence.match(/(fai[st] (l[ea] |l')(.*)|quel(le)? (bruit|son) fai[st] (l[ea] |l')(.*))/i);
-		return ['ANIMAL', { animal: match[5] || match[9] }];
+		return ['ANIMAL', { animal: match[3] || match[5] || match[9] }];
 	}
 	if (sentence.match(/(meteo (a |de )?(.*)|quel temps( [\w-']+)* a (.*))/i)) {
 		const match = sentence.match(/(meteo (a |de )?(.*)|quel temps( [\w-']+)* a (.*))/i);
@@ -78,7 +72,15 @@ function sentenceType(sentence, waitForResponse) {
 	}
 	if (sentence.match(/(^|\s)meteo(\s|$)/i))
 		return ['WEATHER', { city: null }];
-	if (sentence.match(/(repete|re ?di[st])/i))
+	if ((lastSentences[0].type === 'GREETINGS_HOW_ARE_YOU' || lastSentences[0].type === 'GREETINGS_HELLO') && sentence.match(/(ca va|je (me (porte|sens)|vais) bien)/i))
+		return ['GREETINGS_RESPONSE_GOOD', {}];
+	if ((lastSentences[0].type === 'GREETINGS_HOW_ARE_YOU' || lastSentences[0].type === 'GREETINGS_HELLO') && sentence.match(/(ca (ne )? va pas|je (ne )? (me (porte|sens)|vais) (pas bien|mal))/i))
+		return ['GREETINGS_RESPONSE_BAD', {}];
+	if (sentence.match(/((est[- ]ce que |comment )?ca va|((tu|vous) (vas|allez)|(vas|allez)[- ](tu|vous)) bien|comment ((tu|vous|ca) (vas|allez)|(vas|allez)[- ](tu|vous)))/i))
+		return ['GREETINGS_HOW_ARE_YOU', {}];
+	if ((sentence.match(/((^|\s)comment(\s|$))/i) && sentence.match(/((^|\s)t'appelle(\s|$))/i)) || (sentence.match(/((^|\s)(quel est|c'est quoi)(\s|$))/i) && sentence.match(/((^|\s)ton (nom|prénom|blaze)(\s|$))/i)))
+		return ['GREETINGS_NAME', {}];
+	if (sentence.match(/^(repete|re ?di[st])/i))
 		return ['REPEAT', {}];
 	if (sentence.match(/^(encore|refais|une autre)$/i))
 		return [lastSentences[0].type, lastSentences[0].parameters];

@@ -25,6 +25,8 @@ async function response(meaning) {
 		readAudio(randomItem(['Je suis heureuse de l\'apprendre.', 'Vous m\'en voyez ravie.', 'Très bien.']));
 	else if (meaning.type === 'GREETINGS_RESPONSE_BAD')
 		readAudio(randomItem(['Oh, j\'en suis désolé.', 'Vous m\'en voyez navré.', 'Désolé de l\'apprendre']));
+	else if (meaning.type === 'GREETINGS_NAME')
+		readAudio(randomItem(['Je m\'appelle Ada.', 'Mon nom est Ada.', 'Mon prénom est Ada', 'Je me prénomme Ada.', 'Je me nomme Ada.']));
 	else if (meaning.type === 'MUSIC_PAUSE')
 		audioApi.pause();
 	else if (meaning.type === 'MUSIC_PLAY')
