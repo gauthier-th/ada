@@ -5,8 +5,8 @@ module.exports = (sentence) => {
 		return ['MUSIC_PREVIOUS', {}];
 	if (sentence.match(/((mets?( sur)? |mais )?pause|arrete la (musique|chanson))|[ml]'epouse/i))
 		return ['MUSIC_PAUSE', {}];
-	if (sentence.match(/((re)?(met|mais|joue) (la (musique|chanson) (.+)|([dt]u .+))|joue (.+))/i)) {
-		const match = sentence.match(/((re)?(met|mais|joue) (la (musique|chanson) (.+)|([dt]u .+))|joue (.+))/i);
+	if (sentence.match(/((re)?(mets?|mais|joue) (la (musique|chanson) (.+)|([dt]u .+))|joue (.+))/i)) {
+		const match = sentence.match(/((re)?(mets?|mais|joue) (la (musique|chanson) (.+)|([dt]u .+))|joue (.+))/i);
 		return ['MUSIC_QUERY', { query: match[6] || match[7] || match[8] }];
 	}
 	if (sentence.match(/((mets? |mais )?(play|plait)|(mets?|joue|rejoue) la (musique|chanson))/i))

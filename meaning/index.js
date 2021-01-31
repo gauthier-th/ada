@@ -12,7 +12,7 @@ const plugins = [
 
 function sentenceType(sentence, waitForResponse) {
 	if (!sentence)
-		return ['NOTHING', {}];
+		return ['NOTHING', {}, 1];
 	sentence = removeAccents(sentence);
 	let result;
 	let match;
@@ -25,15 +25,16 @@ function sentenceType(sentence, waitForResponse) {
 	}
 	if (result)
 		return result;
-	return ['UNKNOWN', {}];
+	return ['UNKNOWN', {}, 1];
 }
 
 function meaning(sentence, waitForResponse) {
-	const [type, parameters] = sentenceType(sentence, waitForResponse);
+	const [type, parameters, trust] = sentenceType(sentence, waitForResponse);
 	lastSentences.unshift({ type, parameters });
 	return {
 		type,
-		parameters
+		parameters: parameters ?? {},
+		trust: trust ?? 1
 	}
 }
 
