@@ -7,6 +7,7 @@ const plugins = [
 	require('./audio'),
 	require('./music'),
 	require('./tram'),
+	require('./discussion'),
 	require('./other')
 ];
 

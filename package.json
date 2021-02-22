@@ -2,9 +2,11 @@
   "name": "ada-ai",
   "version": "1.0.0",
   "description": "Ada voice assistant",
-  "main": "index.js",
+  "main": "app/app.js",
   "scripts": {
-    "start": "node index.js",
+    "build": "webpack --mode development --config app/webpack.config.js",
+    "build:prod": "webpack --mode production --config app/webpack.config.js",
+    "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -15,6 +17,8 @@
   "author": "gauthier-th",
   "license": "MIT",
   "dependencies": {
+    "@tensorflow-models/speech-commands": "^0.5.2",
+    "@tensorflow/tfjs": "^2.8.6",
     "divia-api": "^1.0.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
@@ -22,11 +26,24 @@
     "node-media-controller": "0.0.6",
     "node-mic-record": "0.0.1",
     "pug": "^3.0.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
     "request": "^2.88.2",
     "win-audio": "^2.0.2"
   },
   "bugs": {
     "url": "https://github.com/gauthier-th/ada/issues"
   },
-  "homepage": "https://github.com/gauthier-th/ada#readme"
+  "homepage": "https://github.com/gauthier-th/ada#readme",
+  "devDependencies": {
+    "@babel/core": "^7.12.17",
+    "@babel/preset-react": "^7.12.13",
+    "babel-loader": "^8.2.2",
+    "css-loader": "^5.0.2",
+    "electron": "^11.3.0",
+    "html-webpack-plugin": "^5.2.0",
+    "style-loader": "^2.0.0",
+    "webpack": "^5.23.0",
+    "webpack-cli": "^4.5.0"
+  }
 }

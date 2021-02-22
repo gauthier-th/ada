@@ -1,7 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const { playSound } = require('../../utils');
-const stt = require('../../stt');
+const stt = require('../../core/stt');
 
 function animals(animal) {
 	const soundPath = path.join(__dirname, animal.replace(/ /g, '-') + '.wav');

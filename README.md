@@ -1,13 +1,12 @@
 # Ada Assistant
 
-Ada is a tiny voice assistant made with Porcupine and Wit.ai.
+Ada is a tiny voice assistant made with Tensorflow (hotword) and Wit.ai (speech recognition).
 
-Works on Windows 10 x64.
+Works on Windows 10 x64. Should work on other platforms (but not tested).
 
 ## Requirements
 
 - Node.js v14+
-- Python 3.6
 - SoX 14.4.1
 
 Both of these must be add in [PATH](https://en.wikipedia.org/wiki/PATH_(variable)).
@@ -29,6 +28,7 @@ Create a `.env` file in the root directory according to `.env.example`.
 - `ROOT_URL`: root web server URL (e.g. `http://localhost:8080/`)
 - `OPENWEATHERMAP`: your OpenWeatherMap API key ([see here](https://openweathermap.org/))
 - `OPENWEATHERMAP`: your OpenWeatherMap API key ([see here](https://openweathermap.org/))
+- `HOTWORD_NAME`: the name of the hotword model generated with [Teachable Machine](https://teachablemachine.withgoogle.com/train/audio)
 
 You can customize the `configs/apps.js` file where are stored the available applications, and you can edit the `configs/jokes.json` files in order to edit the jokes.
 
@@ -64,11 +64,13 @@ Example of commands:
 
 You can easily modify this project in order to add new commands/features, change the langage, ...
 
-The entry point is `index.js`, making the link between the hotword, the STT, the meaning detector, the response handler and the TTS.
+The entry point is an [Electron](https://www.electronjs.org/) app, making the link between the hotword, the STT, the meaning detector, the response handler and the TTS.
 
 ### Hotword
 
-The hotword engine uses Python and Porcupine in order to detect the "OK Ada". Python is required because the Node.js Porcupine module does not run on Windows.
+The hotword engine uses [Tensorflow's Speech Commands](https://github.com/tensorflow/tfjs-models/tree/master/speech-commands). The model is trained with my own voice so it can working not well/not at all.
+
+You can train your own hotword on [Teachable Machine](https://teachablemachine.withgoogle.com/train/audio), put the three files (`model.json`, `metadata.json` and `weights.bin`) of your model in the folder `hotword-model`.
 
 ### STT:
 

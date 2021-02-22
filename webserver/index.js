@@ -4,6 +4,7 @@ const express = require('express');
 const app = express();
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/hotword-model', express.static(path.join(__dirname, '../hotword-model')));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
