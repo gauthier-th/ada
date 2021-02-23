@@ -1,6 +1,7 @@
 const webpack = require("webpack");
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 require('dotenv').config();
 
 module.exports = {
@@ -23,7 +24,12 @@ module.exports = {
       {
         test: /\.css$/,
         use: ["style-loader", "css-loader"],
-      }
+      },
+      {
+        test: /\.svg$/,
+        use: ['svg-loader']
+      },
+      { test: /\.(png|woff|woff2|eot|ttf|svg)$/, use: ['url-loader?limit=100000'] }
     ]
   },
   resolve: {
@@ -44,7 +50,17 @@ module.exports = {
     }),
     new webpack.ExternalsPlugin('commonjs', [
       'electron'
-    ])
+    ]),
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery',
+    }),
+    new CopyPlugin({
+      patterns: [
+        { from: path.resolve(__dirname, "../node_modules/@tensorflow/tfjs/dist/tf.min.js"), to: "." },
+        { from: path.resolve(__dirname, "../node_modules/@tensorflow-models/speech-commands/dist/speech-commands.min.js"), to: "." },
+      ],
+    })
   ],
   devtool: "source-map"
 };

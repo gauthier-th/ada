@@ -1,4 +1,5 @@
 require('dotenv').config();
+const path = require('path');
 const { app, BrowserWindow, ipcMain } = require('electron');
 
 const core = require('../core');
@@ -8,8 +9,10 @@ function createWindow () {
 		width: 800,
 		height: 600,
 		webPreferences: {
-			preload: __dirname + '/preload.js'
-		}
+			nodeIntegration: true,
+			enableRemoteModule: true
+		},
+		frame: false
 	});
 
 	win.loadFile('app/build/index.html');

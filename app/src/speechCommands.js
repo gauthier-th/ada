@@ -1,6 +1,3 @@
-import * as tf from '@tensorflow/tfjs';
-import * as speechCommands from '@tensorflow-models/speech-commands';
-
 // more documentation available at
 // https://github.com/tensorflow/tfjs-models/tree/master/speech-commands
 
@@ -30,6 +27,7 @@ export async function registerHotword(callback = () => {}, onReady = () => {}, p
 		}
 		for (let i = 0; i < classLabels.length; i++) {
 			if (classLabels[i] === __HOTWORD_NAME__ && result.scores[i].toFixed(2) > parameters.treshold && Date.now() - lastHotword > 1000) {
+				console.log('hotword: ' + result.scores[i].toFixed(2));
 				lastHotword = Date.now();
 				callback();
 			}

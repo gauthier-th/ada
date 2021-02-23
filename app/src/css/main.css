@@ -1,0 +1,49 @@
+@font-face {
+	font-family: "Dosis";
+	src: url("../assets/Dosis-VariableFont_wght.ttf") format("ttf");
+}
+
+body {
+	font-family: "Dosis", sans-serif;
+}
+
+
+.frame-title-bar {
+	-webkit-app-region: drag;
+	height: 22px;
+	display: flex;
+	justify-content: space-between;
+	background-color: #323233;
+	color: #fff;
+	z-index: 999;
+}
+/* .frame-title-bar > .icon {
+	margin: 4px 8px;
+	width: 138px;
+}
+.frame-title-bar > .icon > img {
+	width: 24px;
+} */
+.frame-title-bar > .title {
+	font-size: 14px;
+	padding: 1px 4px;
+}
+.frame-title-bar > .controls {
+	-webkit-app-region: no-drag;
+	display: flex;
+	font-family: 'Segoe MDL2 Assets';
+	font-size: 10px;
+	line-height: 22px;
+	text-align: center;
+}
+.frame-title-bar > .controls > div {
+	width: 30px;
+	height: 22px;
+	cursor: default;
+}
+.frame-title-bar > .controls > div:hover {
+	background-color: #474748;
+}
+.frame-title-bar > .controls > div:last-child:hover {
+	background-color: #D61425;
+}

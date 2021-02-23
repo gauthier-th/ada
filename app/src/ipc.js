@@ -1,4 +1,4 @@
-const ipcRenderer = window.ipcRenderer;
+const { ipcRenderer } = window.require('electron');
 
 export const triggerHotword = () => {
 	ipcRenderer.send('trigger-hotword');
