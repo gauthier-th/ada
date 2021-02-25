@@ -17,7 +17,7 @@ const HolographicProjection = () => {
 	}, []);
 	return <div
 		ref={containerRef}
-		style={{ position: 'fixed', top: 0, left: 0, zIndex: -1 }}
+		style={{ position: 'fixed', top: '-16vh', left: 0, zIndex: -1 }}
 	></div>;
 };
 
@@ -143,7 +143,6 @@ const lightColor = 0x0099ff;
 const DEFAULT_LAYER = 0;
 const OCCLUSION_LAYER = 1;
 const renderScale = .25;
-const gui = new dat.GUI();
 const clock = new THREE.Clock();
 
 let composer,

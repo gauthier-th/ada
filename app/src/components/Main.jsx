@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { BrowserRouter, Route } from 'react-router-dom';
 import Frame from './Frame';
-import SquareBackground from './SquareBackground';
-import HolographicProjection from './HolographicProjection';
+import Home from './pages/Home';
+
 import { registerHotword } from '../speechCommands';
 import { triggerHotword } from '../ipc';
 
@@ -12,12 +13,18 @@ const Main = (props) => {
 			triggerHotword();
 		}, () => setReady(true));
 	}, []);
-	return <Frame>
-		<h1>Ada Assistant</h1>
-		{ready && <h2>Ready!</h2>}
-		{/* <SquareBackground /> */}
-		<HolographicProjection />
-	</Frame>;
+	if (ready) {
+		return <Frame>
+			<BrowserRouter>
+				<Route render={Home} />
+			</BrowserRouter>
+		</Frame>;
+	}
+	else {
+		return <Frame>
+			<h1 className="text-center">Chargement...</h1>
+		</Frame>;
+	}
 }
 
 export default Main;

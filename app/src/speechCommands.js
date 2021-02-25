@@ -13,7 +13,7 @@ async function createModel() {
 	return recognizer;
 }
 
-export async function registerHotword(callback = () => {}, onReady = () => {}, parameters = { treshold: 0.95, overlapFactor: 0.75 }) {
+export async function registerHotword(callback = () => {}, onReady = () => {}, parameters = { treshold: 0.97, overlapFactor: 0.75 }) {
 	const recognizer = await createModel();
 	const classLabels = recognizer.wordLabels();
 
@@ -26,11 +26,13 @@ export async function registerHotword(callback = () => {}, onReady = () => {}, p
 			onReady();
 		}
 		for (let i = 0; i < classLabels.length; i++) {
-			if (classLabels[i] === __HOTWORD_NAME__ && result.scores[i].toFixed(2) > parameters.treshold && Date.now() - lastHotword > 1000) {
+			if (classLabels[i] === __HOTWORD_NAME__ && result.scores[i].toFixed(2) >= parameters.treshold && Date.now() - lastHotword > 1000) {
 				console.log('hotword: ' + result.scores[i].toFixed(2));
 				lastHotword = Date.now();
 				callback();
 			}
+			else if (classLabels[i] === __HOTWORD_NAME__ && Date.now() - lastHotword > 1000)
+				console.log('not hotword: ' + result.scores[i].toFixed(2));
 		}
 	}, {
 		includeSpectrogram: true,
